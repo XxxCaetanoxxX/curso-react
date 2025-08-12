@@ -10,7 +10,7 @@ function App() {
         <label>Digite seu nome:</label>
         <input placeholder='Digite seu nome...'></input>
         <label>Digite o ano que voce nasceu:</label>
-        <input placeholder='Digite seu ano de nascimento...'></input>
+        <input placeholder='Digite seu ano de nascimento...' type='number'></input>
         <button className='btn-submit' type='submit'>Descobrir Idade</button>
       </form>
     </div>
