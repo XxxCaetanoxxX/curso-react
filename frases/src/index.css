@@ -1,0 +1,11 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* A largura e altura declaradas passam a incluir conteúdo, padding e border.
+  Assim, o elemento não cresce além da medida que você colocou. */
+}
+
+body{
+  font-family: sans-serif;
+}
