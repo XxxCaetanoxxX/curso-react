@@ -1,11 +1,13 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 
 function App() {
   //usado para mudar o foco do elmento
   const inputRef = useRef<HTMLInputElement>(null);
+
   //controlar primeira renderizacao do useEffect
   const firstRender = useRef(true);
 
+  //controla os estados
   const [input, setInput] = useState('');
   const [editTask, setEditTask] = useState({
     enabled: false,
@@ -26,7 +28,7 @@ function App() {
 
   useEffect(() => {
     //caso seja a primeira renderização, saia da função
-    if(firstRender.current){
+    if (firstRender.current) {
       firstRender.current = false;
       return;
     }
@@ -34,8 +36,18 @@ function App() {
 
   }, [tasks]);
 
-  function handleRegister() {
-    if (!input) {
+  // evita a perca de performace, renderizando apenas quando a
+  // lista de tarefas sofrer uma varição
+  const totalTarefas = useMemo(() => {
+    return tasks.length
+  }, [tasks])
+
+  //handle register evita com que uma função sofra realocamento
+  //de memoria ao renderizar novamente o componente
+  //pr exemplo, se eu excluir uma tarefa, essa função abaixo também
+  //sera executada, o que não é necessario, uma vez que nao foi usada
+  const handleRegister = useCallback(() => {
+     if (!input) {
       alert("preencha o nome da sua tarefa");
       return;
     }
@@ -47,7 +59,7 @@ function App() {
 
     setTasks([...tasks, input]);
     setInput('');
-  }
+  },[input, tasks])
 
   function handleSaveEdit() {
     const findIndexTask = tasks.findIndex(task => task == editTask.task)
@@ -94,6 +106,9 @@ function App() {
       </button>
 
       <hr />
+
+      <strong>Voce têm {totalTarefas} tarefas</strong>
+      <br /><br />
 
       {tasks.map((item, index) => (
         <section key={item}>
