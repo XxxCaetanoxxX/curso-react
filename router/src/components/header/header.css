@@ -1,0 +1,22 @@
+header{
+    width: 100%;
+    height: 100px;
+    background-color: #121212;
+    color: #FFF;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+}
+
+header a {
+    color: #ffff;
+    font-size: 18px;
+}
+
+/* Selecione qualquer elemento <a> que venha imediatamente depois de outro <a> dentro de um <header>. */
+header a + a{
+    margin-left: 10px;
+}
