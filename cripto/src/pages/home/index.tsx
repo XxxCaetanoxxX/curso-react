@@ -3,7 +3,7 @@ import { BsSearch } from 'react-icons/bs'
 import { Link, useNavigate } from 'react-router-dom'
 import { useState, type FormEvent, useEffect } from 'react'
 
-interface CoinProps {
+export interface CoinProps {
   id: string;
   rank: string;
   symbol: string;
@@ -120,7 +120,7 @@ export function Home() {
                 <div className={styles.name}>
                   <img
                     className={styles.logo}
-                    // alt='Logo Cripto' 
+                    alt='Logo Cripto' 
                     src={`https://assets.coincap.io/assets/icons/${item.symbol.toLowerCase()}@2x.png`} />
                   <Link to={`/detail/${item.id}`}>
                     <span>{item.name}</span> | {item.symbol}
