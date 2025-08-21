@@ -1,6 +1,7 @@
 import { Header } from "../../components/header";
 import { Input } from "../../components/input";
 import { useState } from 'react'
+import { FiTrash } from "react-icons/fi";
 
 export function Admin() {
     const [nameInput, setNameInput] = useState<string>('');
@@ -50,16 +51,39 @@ export function Admin() {
 
                 </section>
 
-                <div className="flex items-center justify-center flex-col mb-7 p-1 border-gray-100/25 border rounded-md">
-                    <label className="text-white font-medium mt-2 mb-3">Veja como esta ficando:</label>
-                    <article
-                        className="w-11/12 max-w-lg flex flex-col items-center justify-between bg-zinc-900 rounded px-1 py-3"
-                        style={{ marginBottom: 8, marginTop: 8, backgroundColor: backgroundColorInput, color: textColorInput }}
-                    >
-                        <p>Canal do Youtube</p>
-                    </article>
-                </div>
+                {nameInput !== '' && (
+
+                    <div className="flex items-center justify-center flex-col mb-7 p-1 border-gray-100/25 border rounded-md">
+                        <label className="text-white font-medium mt-2 mb-3">Veja como esta ficando:</label>
+                        <article
+                            className="w-11/12 max-w-lg flex flex-col items-center justify-between bg-zinc-900 rounded px-1 py-3"
+                            style={{ marginBottom: 8, marginTop: 8, backgroundColor: backgroundColorInput, color: textColorInput }}
+                        >
+                            <p>{nameInput}</p>
+                        </article>
+                    </div>
+                )}
+
+                <button
+                    type="submit"
+                    className="bg-blue-600 h-9 rounded-md text-white font-medium gap-4 flex justify-center items-center mb-7">
+                    Cadastrar
+                </button>
             </form>
+
+            <h2 className="font-bold text-white text-2xl mb-4">
+                Meus links
+            </h2>
+
+            <article className="flex items-center justify-between w-11/12 max-w-xl rounded py-3 px-2 mb-2 select-none"
+                style={{ backgroundColor: "#2563EB", color: "#FFF" }}>
+                <p>Canal do YT</p>
+                <div>
+                    <button className="border border-dashed py-1 p-1 rounded bg-transparent">
+                        <FiTrash size={18} color="#FFF" />
+                    </button>
+                </div>
+            </article>
         </div>
     )
 }
