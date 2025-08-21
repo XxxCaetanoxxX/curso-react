@@ -1,7 +1,10 @@
 import { Header } from "../../components/header";
 import { Input } from "../../components/input";
-import { useState } from 'react'
+import { useState, type FormEvent } from 'react'
 import { FiTrash } from "react-icons/fi";
+
+import { db } from '../../services/firebaseConnection'
+import { addDoc, collection, onSnapshot, query, orderBy, doc, deleteDoc } from 'firebase/firestore'
 
 export function Admin() {
     const [nameInput, setNameInput] = useState<string>('');
@@ -9,11 +12,33 @@ export function Admin() {
     const [textColorInput, setTextColorInput] = useState<string>('#f1f1f1');
     const [backgroundColorInput, setBackgroundColorInput] = useState<string>('#121212');
 
+    function hanldeRegister(e: FormEvent) {
+        e.preventDefault();
+
+        if (nameInput === '' || urlInput === '') {
+            alert('Preencha todos os campos!');
+            return;
+        }
+
+        addDoc(collection(db, 'links'), {
+            name: nameInput,
+            url: urlInput,
+            bg: backgroundColorInput,
+            color: textColorInput,
+            created: new Date()
+        }).then(() => {
+            setNameInput('');
+            setUrlInput('');
+            console.log('cadastrado com sucesso')
+        }).catch((error) => {
+            console.log('ERRO AO CADASTRAR NO BANCO', error);
+        })
+    }
 
     return (
         <div className="flex flex-col items-center min-h-screen pb-7 px-2">
             <Header />
-            <form className="flex flex-col mt-8 mb-3 w-full max-w-xl">
+            <form className="flex flex-col mt-8 mb-3 w-full max-w-xl" onSubmit={hanldeRegister}>
                 <label className="text-white font-medium mt-2 mb-2">Nome do link</label>
                 <Input
                     placeholder="Digite o nome do link"
