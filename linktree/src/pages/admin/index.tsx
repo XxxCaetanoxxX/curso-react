@@ -1,16 +1,51 @@
 import { Header } from "../../components/header";
 import { Input } from "../../components/input";
-import { useState, type FormEvent } from 'react'
+import { useState, type FormEvent, useEffect } from 'react'
 import { FiTrash } from "react-icons/fi";
 
 import { db } from '../../services/firebaseConnection'
 import { addDoc, collection, onSnapshot, query, orderBy, doc, deleteDoc } from 'firebase/firestore'
+
+interface LinkProps {
+    id: string,
+    name: string,
+    url: string,
+    bg: string,
+    color: string
+}
 
 export function Admin() {
     const [nameInput, setNameInput] = useState<string>('');
     const [urlInput, setUrlInput] = useState<string>('');
     const [textColorInput, setTextColorInput] = useState<string>('#f1f1f1');
     const [backgroundColorInput, setBackgroundColorInput] = useState<string>('#121212');
+    const [links, setLinks] = useState<LinkProps[]>([]);
+
+    useEffect(() => {
+        const linksRef = collection(db, 'links');
+        const queryRef = query(linksRef, orderBy("created", "asc"));
+
+        const unsub = onSnapshot(queryRef, (snapshot) => {
+            let lista: LinkProps[] = [];
+
+            snapshot.forEach((doc) => {
+                lista.push({
+                    id: doc.id,
+                    name: doc.data().name,
+                    url: doc.data().url,
+                    bg: doc.data().bg,
+                    color: doc.data().color
+                })
+            })
+
+            setLinks(lista);
+        })
+
+        //para de monitorar o banco quando sai da pagina
+        return () => {
+            unsub();
+        }
+    }, [])
 
     function hanldeRegister(e: FormEvent) {
         e.preventDefault();
@@ -33,6 +68,11 @@ export function Admin() {
         }).catch((error) => {
             console.log('ERRO AO CADASTRAR NO BANCO', error);
         })
+    }
+
+    async function handleDelete(id: string) {
+        const docRef= doc(db, "links", id);
+        await deleteDoc(docRef);
     }
 
     return (
@@ -100,15 +140,22 @@ export function Admin() {
                 Meus links
             </h2>
 
-            <article className="flex items-center justify-between w-11/12 max-w-xl rounded py-3 px-2 mb-2 select-none"
-                style={{ backgroundColor: "#2563EB", color: "#FFF" }}>
-                <p>Canal do YT</p>
-                <div>
-                    <button className="border border-dashed py-1 p-1 rounded bg-transparent">
-                        <FiTrash size={18} color="#FFF" />
-                    </button>
-                </div>
-            </article>
+            {links.map((link) => (
+                <article
+                    key={link.id}
+                    className="flex items-center justify-between w-11/12 max-w-xl rounded py-3 px-2 mb-2 select-none"
+                    style={{ backgroundColor: link.bg, color: link.color }}>
+                    <p>{link.name}</p>
+                    <div>
+                        <button
+                            className="border border-dashed py-1 p-1 rounded bg-transparent cursor-pointer"
+                            onClick={() => handleDelete(link.id)}
+                        >
+                            <FiTrash size={18} color="#FFF" />
+                        </button>
+                    </div>
+                </article>
+            ))}
         </div>
     )
 }
