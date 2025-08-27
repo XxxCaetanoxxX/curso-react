@@ -3,11 +3,7 @@ import { CartContext } from '../../contexts/cartContext';
 import { Link } from 'react-router-dom';
 
 export function Cart() {
-    const { cart } = useContext(CartContext);
-
-    const total = cart.reduce((acc, product) => {
-        return acc + product.price * product.amount;
-    }, 0);
+    const { cart, total, addItemCart, removeItemCart } = useContext(CartContext);
 
     return (
         <div className="w-full max-w-7xl mx-auto">
@@ -30,12 +26,12 @@ export function Cart() {
                             })}</strong>
 
                             <div className="flex gap-3 items-center justify-center">
-                                <button className="bg-slate-600 px-2 rounded text-white font-medium flex items-center justify-center"
+                                <button onClick={() => removeItemCart(product)} className="bg-slate-600 px-2 rounded text-white font-medium flex items-center justify-center"
                                 >
                                     -
                                 </button>
                                 {product.amount}
-                                <button className="bg-slate-600 px-2 rounded text-white font-medium flex items-center justify-center"
+                                <button onClick={() => addItemCart(product)} className="bg-slate-600 px-2 rounded text-white font-medium flex items-center justify-center"
                                 >
                                     +
                                 </button>
@@ -50,10 +46,7 @@ export function Cart() {
                         </section>
                     ))}
 
-                    <p className="font-bold mt-4">Total: {total.toLocaleString("pt-BR", {
-                        style: "currency",
-                        currency: "BRL"
-                    })}</p>
+                    <p className="font-bold mt-4">Total: {total}</p>
                 </>
             ) : (
                 <div className='flex flex-col items-center justify-center'>
