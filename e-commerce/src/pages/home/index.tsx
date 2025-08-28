@@ -4,6 +4,7 @@ import { BsCartPlus } from "react-icons/bs"
 import { api } from '../../services/api'
 import { CartContext } from '../../contexts/cartContext'
 import toast from 'react-hot-toast'
+import { Link } from "react-router-dom"
 
 export interface ProductProps {
     id: number;
@@ -31,7 +32,7 @@ export function Home() {
             style: {
                 borderRadius: 10,
                 backgroundColor: "#121212",
-                color:"#FFF"
+                color: "#FFF"
             }
         })
         addItemCart(product);
@@ -46,11 +47,13 @@ export function Home() {
 
                     {products.map((product) => (
                         <section key={product.id} className="w-full">
+                            <Link to={`/product/${product.id}`}>
+                                <img
+                                    className="w-full rounded-lg max-h-70 mb-2"
+                                    alt={product.title}
+                                    src={product.cover} />
+                            </Link>
 
-                            <img
-                                className="w-full rounded-lg max-h-70 mb-2"
-                                alt={product.title}
-                                src={product.cover} />
                             <p className="font-medium mt-1 mb-2"> {product.title}</p>
 
                             <div className="flex gap-3 items-center">

@@ -3,6 +3,7 @@ import { Cart } from './pages/cart'
 import { createBrowserRouter} from 'react-router-dom'
 
 import {Layoult} from './components/layoult'
+import { Detail } from './pages/detail'
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
       {
         path:"/cart",
         element: <Cart />
+      },
+      {
+        path:"/product/:id",
+        element: <Detail />
       }
     ]
   }
