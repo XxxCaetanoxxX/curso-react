@@ -1,5 +1,5 @@
 import { type ReactNode, createContext, useState, useEffect } from 'react';
-import {auth} from '../services/firebaseConnection'
+import { auth } from '../services/firebaseConnection'
 import { onAuthStateChanged } from 'firebase/auth';
 
 interface AuthProviderProps {
@@ -9,6 +9,8 @@ interface AuthProviderProps {
 type AuthContextData = {
     signed: boolean;
     loading: boolean;
+    handleInfoUser: ({name, email, uid}: UserProps) => void;
+    user: UserProps | null;
 }
 
 interface UserProps {
@@ -23,32 +25,42 @@ function AuthProvider({ children }: AuthProviderProps) {
     const [user, setUser] = useState<UserProps | null>(null);
     const [loadingAuth, setLoadingAuth] = useState(true);
 
-    useEffect(()=>{
-        const unsub = onAuthStateChanged(auth, (user)=>{
-            if(user){
+    useEffect(() => {
+        const unsub = onAuthStateChanged(auth, (user) => {
+            if (user) {
                 //tem usr logado
                 setUser({
-                    uid:user.uid,
+                    uid: user.uid,
                     name: user?.displayName,
                     email: user?.email
                 })
                 setLoadingAuth(false);
-            } else{
+            } else {
                 setUser(null)
                 setLoadingAuth(false);
 
             }
         })
-        return ()=>{
+        return () => {
             unsub();
         }
-    },[])
+    }, [])
+
+    function handleInfoUser({ name, email, uid }: UserProps) {
+        setUser({
+            name,
+            email,
+            uid
+        })
+    }
 
     return (
         <AuthContext.Provider
             value={{
                 signed: !!user,
-                loading: loadingAuth
+                loading: loadingAuth,
+                handleInfoUser,
+                user
             }}>
             {children}
         </AuthContext.Provider>
